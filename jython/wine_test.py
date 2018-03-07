@@ -25,7 +25,8 @@ INPUT_FILE = os.path.join("..", "..", "..", "Data", "winequality-white-modified.
 INPUT_LAYER = 11
 HIDDEN_LAYER = 9
 OUTPUT_LAYER = 1
-TRAINING_ITERATIONS = 100
+#TRAINING_ITERATIONS = 100
+TRAINING_ITERATIONS = {'RHC':100, 'SA': 100, 'GA':100}
 
 
 def initialize_instances():
@@ -55,7 +56,7 @@ def train(oa, network, oaName, instances, measure):
     """
     print "\nError results for %s\n---------------------------" % (oaName,)
     error_array = []
-    for iteration in xrange(TRAINING_ITERATIONS):
+    for iteration in xrange(TRAINING_ITERATIONS[oaName]):
         oa.train()
 
         error = 0.00
@@ -69,11 +70,12 @@ def train(oa, network, oaName, instances, measure):
             error += measure.value(output, example)
 
         print "%0.03f" % error
-        error_array.append(round(error,3))
+        error_array.append([iteration+1, round(error,3)])
 
-    filename = 'data/wine/error_' + oaName + '_1.txt'
-    writer = csv.writer(open(filename,'w'))
-    writer.writerows(error_array)
+    filename = 'data/wine/error_' + oaName + '_1.csv'
+    with open(filename, 'w') as f:
+        writer = csv.writer(f)
+        writer.writerows(error_array)
     print 'wrote to file {}'.format(filename)
 
 
@@ -89,6 +91,8 @@ def main():
     oa = []  # OptimizationAlgorithm
     oa_names = ["RHC", "SA", "GA"]
     results = ""
+    # result_array = [["Algorithm", "# Correctly Classified", "# Incorrectly Classified", "Training Time", "Testing Time", "Number of Iterations"]]
+    result_array = []
 
     for name in oa_names:
         classification_network = factory.createClassificationNetwork([INPUT_LAYER, HIDDEN_LAYER, OUTPUT_LAYER])
@@ -131,9 +135,14 @@ def main():
         results += "\nIncorrectly classified %d instances.\nPercent correctly classified: %0.03f%%" % (incorrect, float(correct)/(correct+incorrect)*100.0)
         results += "\nTraining time: %0.03f seconds" % (training_time,)
         results += "\nTesting time: %0.03f seconds\n" % (testing_time,)
-
+        results += "\nNumber of iterations: %d\n" % (TRAINING_ITERATIONS[oa_names[i]])
+        result_array.append([name, correct, incorrect, float(correct)/(correct+incorrect)*100.0, round(training_time,3), round(testing_time,3), TRAINING_ITERATIONS[oa_names[i]]])
     print results
 
+
+    with open("test_results.txt","a") as result_file:
+        writer = csv.writer(result_file)
+        writer.writerows(result_array)
 
 if __name__ == "__main__":
     main()
