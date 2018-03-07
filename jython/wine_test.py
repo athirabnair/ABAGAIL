@@ -1,9 +1,8 @@
 """
 Implementation of randomized hill climbing, simulated annealing, and genetic algorithm to
-find optimal weights to a neural network that is classifying abalone as having either fewer
-or more than 15 rings.
+find optimal weights to a neural network that is classifying wine as either good or bad quality
 
-Based on AbaloneTest.java by Hannah Lau
+Based on AbaloneTest.java
 """
 
 from __future__ import with_statement
@@ -21,25 +20,25 @@ import opt.SimulatedAnnealing as SimulatedAnnealing
 import opt.ga.StandardGeneticAlgorithm as StandardGeneticAlgorithm
 
 
-INPUT_FILE = os.path.join("..", "src", "opt", "test", "abalone.txt")
+INPUT_FILE = os.path.join("..", "..", "..", "Data", "winequality-white-modified.csv")
 
-INPUT_LAYER = 7
-HIDDEN_LAYER = 5
+INPUT_LAYER = 11
+HIDDEN_LAYER = 9
 OUTPUT_LAYER = 1
-TRAINING_ITERATIONS = 1000
+TRAINING_ITERATIONS = 100
 
 
 def initialize_instances():
-    """Read the abalone.txt CSV data into a list of instances."""
+    """Read the winequality-white.csv CSV data into a list of instances."""
     instances = []
 
     # Read in the abalone.txt CSV file
-    with open(INPUT_FILE, "r") as abalone:
-        reader = csv.reader(abalone)
+    with open(INPUT_FILE, "r") as wine:
+        reader = csv.reader(wine)
 
         for row in reader:
             instance = Instance([float(value) for value in row[:-1]])
-            instance.setLabel(Instance(0 if float(row[-1]) < 15 else 1))
+            instance.setLabel(Instance(0 if float(row[-1]) < 0.5 else 1))
             instances.append(instance)
 
     return instances
@@ -55,7 +54,7 @@ def train(oa, network, oaName, instances, measure):
     :param AbstractErrorMeasure measure:
     """
     print "\nError results for %s\n---------------------------" % (oaName,)
-
+    error_array = []
     for iteration in xrange(TRAINING_ITERATIONS):
         oa.train()
 
@@ -70,6 +69,12 @@ def train(oa, network, oaName, instances, measure):
             error += measure.value(output, example)
 
         print "%0.03f" % error
+        error_array.append(round(error,3))
+
+    filename = 'data/wine/error_' + oaName + '_1.txt'
+    writer = csv.writer(open(filename,'w'))
+    writer.writerows(error_array)
+    print 'wrote to file {}'.format(filename)
 
 
 def main():
