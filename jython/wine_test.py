@@ -27,10 +27,10 @@ import opt.ga.StandardGeneticAlgorithm as StandardGeneticAlgorithm
 INPUT_FILE = os.path.join("..", "..", "..", "Data", "winequality-white-modified.csv")
 
 INPUT_LAYER = 11
-HIDDEN_LAYER = 50
+HIDDEN_LAYER = 9
 OUTPUT_LAYER = 1
 #TRAINING_ITERATIONS = 100
-TRAINING_ITERATIONS = {'RHC':1500, 'SA': 2500, 'GA':500}
+TRAINING_ITERATIONS = {'RHC': 1000, 'SA': 2500, 'GA': 2500}
 
 """
 Defaults:
@@ -85,7 +85,7 @@ def train(oa, network, oaName, instances, measure):
         print "%d %0.03f" % (iteration,error)
         error_array.append([iteration+1, round(error,3)])
 
-    filename = 'data/wine/error_' + oaName + '_' + str(TRAINING_ITERATIONS[oaName]) + '.csv'
+    filename = 'data/wine/SA/error_' + oaName + '_1E09_95.csv'
     with open(filename, 'w') as f:
         writer = csv.writer(f)
         writer.writerows(error_array)
@@ -106,7 +106,7 @@ def main():
     networks = []  # BackPropagationNetwork
     nnop = []  # NeuralNetworkOptimizationProblem
     oa = []  # OptimizationAlgorithm
-    oa_names = ["RHC", "SA", "GA"]
+    oa_names = ["SA"]
     results = ""
     # result_array = [["Algorithm", "# Correctly Classified", "# Incorrectly Classified", "Training Time", "Testing Time", "Number of Iterations"]]
     result_array = []
@@ -116,9 +116,9 @@ def main():
         networks.append(classification_network)
         nnop.append(NeuralNetworkOptimizationProblem(data_set, classification_network, measure))
 
-    oa.append(RandomizedHillClimbing(nnop[0]))
-    oa.append(SimulatedAnnealing(1E11, .95, nnop[1]))
-    oa.append(StandardGeneticAlgorithm(200, 100, 10, nnop[2]))
+    # oa.append(RandomizedHillClimbing(nnop[0]))
+    oa.append(SimulatedAnnealing(1E09, .95, nnop[0]))
+    # oa.append(StandardGeneticAlgorithm(200, 100, 10, nnop[2]))
 
     for i, name in enumerate(oa_names):
         start = time.time()

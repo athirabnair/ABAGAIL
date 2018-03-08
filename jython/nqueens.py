@@ -1,4 +1,10 @@
+"""
+For the nqueens problem from the Java file.
+
+-Athira Nair
+"""
 import random
+
 import time
 
 import opt.ga.NQueensFitnessFunction as NQueensFitnessFunction
