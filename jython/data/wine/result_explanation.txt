@@ -16,5 +16,3 @@ Next 9 entries
 3rd set:
 Iterations:
 1000, 2500, 1000
-
-HIDDEN_LAYER=50
