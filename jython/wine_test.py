@@ -27,10 +27,10 @@ import opt.ga.StandardGeneticAlgorithm as StandardGeneticAlgorithm
 INPUT_FILE = os.path.join("..", "..", "..", "Data", "winequality-white-modified.csv")
 
 INPUT_LAYER = 11
-HIDDEN_LAYER = 9
+HIDDEN_LAYER = 50
 OUTPUT_LAYER = 1
 #TRAINING_ITERATIONS = 100
-TRAINING_ITERATIONS = {'RHC':2000, 'SA': 2000, 'GA':1000}
+TRAINING_ITERATIONS = {'RHC':1500, 'SA': 2500, 'GA':500}
 
 """
 Defaults:
@@ -95,7 +95,7 @@ def train(oa, network, oaName, instances, measure):
 def main():
     """Run algorithms on the wine dataset."""
     instances = initialize_instances()
-    training_indices = random.sample(xrange(len(instances)), int(0.8 * len(instances)))
+    training_indices = random.sample(xrange(len(instances)), int(0.7 * len(instances)))
     training_instances = itemgetter(*training_indices)(instances)
     test_indices = list(set(range(len(instances))) - set(training_indices))
     test_instances = itemgetter(*test_indices)(instances)
@@ -153,7 +153,7 @@ def main():
         results += "\nTraining time: %0.03f seconds" % (training_time,)
         results += "\nTesting time: %0.03f seconds" % (testing_time,)
         results += "\nNumber of iterations: %d\n" % (TRAINING_ITERATIONS[oa_names[i]])
-        result_array.append([name, correct, incorrect, float(correct)/(correct+incorrect)*100.0, round(training_time,3), round(testing_time,3), TRAINING_ITERATIONS[oa_names[i]]])
+        result_array.append([name, correct, incorrect, round(float(correct)/(correct+incorrect)*100.0,3), round(training_time,3), round(testing_time,3), TRAINING_ITERATIONS[oa_names[i]]])
     print results
 
 
