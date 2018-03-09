@@ -57,7 +57,7 @@ Commandline parameter(s):
 """
 
 # set N value.  This is the number of points
-N = 50
+N = 70
 random = Random()
 
 points = [[0 for x in xrange(2)] for x in xrange(N)]
@@ -75,18 +75,27 @@ gap = GenericGeneticAlgorithmProblem(ef, odd, mf, cf)
 
 rhc = RandomizedHillClimbing(hcp)
 fit = FixedIterationTrainer(rhc, 200000)
+traintime = time.time()
 fit.train()
+print "Train Time : %0.03f" % (time.time() - traintime)
+starttime = time.time()
 print "RHC Inverse of Distance: " + str(ef.value(rhc.getOptimal()))
+print "Test time : %0.03f" % (time.time() - starttime)
 print "Route:"
 path = []
 for x in range(0,N):
     path.append(rhc.getOptimal().getDiscrete(x))
 print path
 
+
 sa = SimulatedAnnealing(1E12, .999, hcp)
 fit = FixedIterationTrainer(sa, 200000)
+traintime = time.time()
 fit.train()
+print "Train Time : %0.03f" % (time.time() - traintime)
+starttime = time.time()
 print "SA Inverse of Distance: " + str(ef.value(sa.getOptimal()))
+print "Test time : %0.03f" % (time.time() - starttime)
 print "Route:"
 path = []
 for x in range(0,N):
@@ -96,8 +105,12 @@ print path
 
 ga = StandardGeneticAlgorithm(2000, 1500, 250, gap)
 fit = FixedIterationTrainer(ga, 1000)
+traintime = time.time()
 fit.train()
+print "Train Time : %0.03f" % (time.time() - traintime)
+starttime = time.time()
 print "GA Inverse of Distance: " + str(ef.value(ga.getOptimal()))
+print "Test time : %0.03f" % (time.time() - starttime)
 print "Route:"
 path = []
 for x in range(0,N):
@@ -115,8 +128,12 @@ pop = GenericProbabilisticOptimizationProblem(ef, odd, df);
 
 mimic = MIMIC(500, 100, pop)
 fit = FixedIterationTrainer(mimic, 1000)
+traintime = time.time()
 fit.train()
+print "Train Time : %0.03f" % (time.time() - traintime)
+starttime = time.time()
 print "MIMIC Inverse of Distance: " + str(ef.value(mimic.getOptimal()))
+print "Test time : %0.03f" % (time.time() - starttime)
 print "Route:"
 path = []
 optimal = mimic.getOptimal()

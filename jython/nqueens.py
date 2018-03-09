@@ -53,48 +53,55 @@ class NQueensTest:
 
         rhc = RandomizedHillClimbing(hcp)
         fit = FixedIterationTrainer(rhc, 100)
+        traintime = time.time()
         fit.train()
+        print "Train Time : %0.03f" % (time.time() - traintime)
         starttime = time.time()
         print "RHC: %f" % ef.value(rhc.getOptimal())
-        print "RHC: Board Position: "
+        # print "RHC: Board Position: "
         # print(ef.boardPositions())
-        print "Time : %0.03f" % (time.time() - starttime)
+        print "Test Time : %0.03f" % (time.time() - starttime)
 
         print("============================")
 
         sa = SimulatedAnnealing(1E1, .1, hcp)
         fit = FixedIterationTrainer(sa, 100)
+        traintime = time.time()
         fit.train()
-
+        print "Train Time : %0.03f" % (time.time() - traintime)
         starttime = time.time()
         print "SA: %f" % ef.value(sa.getOptimal())
         print("SA: Board Position: ")
         # print(ef.boardPositions())
-        print "Time : %0.03f" % (time.time() - starttime)
+        print "Test Time : %0.03f" % (time.time() - starttime)
 
         print("============================")
 
         starttime = time.time()
         ga = StandardGeneticAlgorithm(200, 0, 10, gap)
         fit = FixedIterationTrainer(ga, 100)
+        traintime = time.time()
         fit.train()
+        print "Train Time : %0.03f" % (time.time() - traintime)
         print "GA: %f" % ef.value(ga.getOptimal())
-        print("GA: Board Position: ")
+        # print("GA: Board Position: ")
         # print(ef.boardPositions())
-        print "Time : %0.03f" % (time.time() - starttime)
+        print "Test Time : %0.03f" % (time.time() - starttime)
 
         print("============================")
 
         starttime = time.time()
         mimic = MIMIC(200, 10, pop)
         fit = FixedIterationTrainer(mimic, 5)
+        traintime = time.time()
         fit.train()
+        print "Train Time : %0.03f" % (time.time() - traintime)
         print "MIMIC: %f" % ef.value(mimic.getOptimal())
-        print("MIMIC: Board Position: ")
+        # print("MIMIC: Board Position: ")
         # print(ef.boardPositions())
-        print "Time : %0.03f" % (time.time() - starttime)
+        print "Test time : %0.03f" % (time.time() - starttime)
 
 
 if __name__ == "__main__":
-    nqueens = NQueensTest(8)
+    nqueens = NQueensTest(50)
     nqueens.main()
