@@ -1,4 +1,4 @@
-Algorithm,# Items,Copies Each,Max Weight,Max Volume,Knapsack Volume,# Iterations,,,,Fitness Score,Train time,Test time
+Algorithm,# Items,Copies Each,Max Weight,Max Volume,Knapsack Volume,# Iterations,Param1,Param2,Param3,Fitness Score,Train time,Test time
 GA,40,4,50,50,3200,1000,200,150,25,3821.10646,0.202,0.001
 GA,40,4,50,50,3200,1000,200,150,25,4295.39921,0.22,0.001
 GA,40,4,50,50,3200,10000,200,150,25,3881.60559,1.803,0

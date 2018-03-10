@@ -1,4 +1,4 @@
-Algorithm,N,# Iterations,,,,Fitness Score,Train time,Test time
+Algorithm,N,# Iterations,Param1,Param2,Param3,Fitness Score,Train time,Test time
 GA,50,1000,2000,1500,250,0.17198,5.463,0
 GA,50,1000,2000,1500,250,0.15586,5.93,0
 GA,100,1000,2000,1500,250,0.10026,10.758,0.001
