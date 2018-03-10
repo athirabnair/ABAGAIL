@@ -1,6 +1,7 @@
 import sys
 import os
 import time
+import csv
 
 import java.io.FileReader as FileReader
 import java.io.File as File
@@ -56,6 +57,16 @@ MAX_VOLUME = 50
 # The volume of the knapsack 
 KNAPSACK_VOLUME = MAX_VOLUME * NUM_ITEMS * COPIES_EACH * .4
 
+TRAINING_ITERATIONS = {'RHC': 200000, 'SA': 200000, 'GA': 10000, 'MIMIC': 10000}
+SA_TEMP = 100
+SA_COOLRATE = .95
+GA_POP = 200
+GA_MATE = 150
+GA_MUTATE = 25
+MIMIC_GENERATE = 200
+MIMIC_KEEP = 100
+
+result_array = []
 # create copies
 fill = [COPIES_EACH] * NUM_ITEMS
 copies = array('i', fill)
@@ -84,37 +95,66 @@ gap = GenericGeneticAlgorithmProblem(ef, odd, mf, cf)
 pop = GenericProbabilisticOptimizationProblem(ef, odd, df)
 
 rhc = RandomizedHillClimbing(hcp)
-fit = FixedIterationTrainer(rhc, 200000)
-traintime = time.time()
-fit.train()
-print "Train Time : %0.03f" % (time.time() - traintime)
+fit = FixedIterationTrainer(rhc, TRAINING_ITERATIONS['RHC'])
 starttime = time.time()
-print "RHC: " + str(ef.value(rhc.getOptimal()))
-print "Test time : %0.03f" % (time.time() - starttime)
+fit.train()
+train_time = (time.time() - starttime)
+print "Train Time : %0.03f" % train_time
+starttime = time.time()
+rhc_opt = ef.value(rhc.getOptimal())
+print "RHC: " + str(rhc_opt)
+test_time = (time.time() - starttime)
+print "Test time : %0.03f" % test_time
+print("============================")
+result_array.append(['RHC', NUM_ITEMS, COPIES_EACH, MAX_WEIGHT, MAX_VOLUME, KNAPSACK_VOLUME, TRAINING_ITERATIONS['RHC'], round(rhc_opt,5), round(train_time,3), round(test_time,3)])
 
-sa = SimulatedAnnealing(100, .95, hcp)
-fit = FixedIterationTrainer(sa, 200000)
-traintime = time.time()
-fit.train()
-print "Train Time : %0.03f" % (time.time() - traintime)
-starttime = time.time()
-print "SA: " + str(ef.value(sa.getOptimal()))
-print "Test time : %0.03f" % (time.time() - starttime)
 
-ga = StandardGeneticAlgorithm(200, 150, 25, gap)
-fit = FixedIterationTrainer(ga, 1000)
-traintime = time.time()
-fit.train()
-print "Train Time : %0.03f" % (time.time() - traintime)
+sa = SimulatedAnnealing(SA_TEMP, SA_COOLRATE, hcp)
+fit = FixedIterationTrainer(sa, TRAINING_ITERATIONS['SA'])
 starttime = time.time()
-print "GA: " + str(ef.value(ga.getOptimal()))
-print "Test time : %0.03f" % (time.time() - starttime)
+fit.train()
+train_time = (time.time() - starttime)
+print "Train Time : %0.03f" % train_time
+starttime = time.time()
+sa_opt = ef.value(sa.getOptimal())
+print "SA: " + str(sa_opt)
+test_time = (time.time() - starttime)
+print "Test time : %0.03f" % test_time
+print("============================")
+result_array.append(['SA', NUM_ITEMS, COPIES_EACH, MAX_WEIGHT, MAX_VOLUME, KNAPSACK_VOLUME, TRAINING_ITERATIONS['SA'], SA_TEMP, SA_COOLRATE, round(sa_opt,5), round(train_time,3), round(test_time,3)])
 
-mimic = MIMIC(200, 100, pop)
-fit = FixedIterationTrainer(mimic, 1000)
-traintime = time.time()
-fit.train()
-print "Train Time : %0.03f" % (time.time() - traintime)
+
+ga = StandardGeneticAlgorithm(GA_POP, GA_MATE, GA_MUTATE, gap)
+fit = FixedIterationTrainer(ga, TRAINING_ITERATIONS['GA'])
 starttime = time.time()
-print "MIMIC: " + str(ef.value(mimic.getOptimal()))
-print "Test time : %0.03f" % (time.time() - starttime)
+fit.train()
+train_time = (time.time() - starttime)
+print "Train Time : %0.03f" % train_time
+starttime = time.time()
+ga_opt = ef.value(ga.getOptimal())
+print "GA: " + str(ga_opt)
+test_time = (time.time() - starttime)
+print "Test time : %0.03f" % test_time
+print("============================")
+result_array.append(['GA', NUM_ITEMS, COPIES_EACH, MAX_WEIGHT, MAX_VOLUME, KNAPSACK_VOLUME, TRAINING_ITERATIONS['GA'], GA_POP, GA_MATE, GA_MUTATE, round(ga_opt,5), round(train_time,3), round(test_time,3)])
+
+
+mimic = MIMIC(MIMIC_GENERATE, MIMIC_KEEP, pop)
+fit = FixedIterationTrainer(mimic, TRAINING_ITERATIONS['MIMIC'])
+starttime = time.time()
+fit.train()
+train_time = (time.time() - starttime)
+print "Train Time : %0.03f" % train_time
+starttime = time.time()
+mimic_opt = ef.value(mimic.getOptimal())
+print "MIMIC: " + str(mimic_opt)
+test_time = (time.time() - starttime)
+print "Test time : %0.03f" % test_time
+print("============================")
+result_array.append(['MIMIC', NUM_ITEMS, COPIES_EACH, MAX_WEIGHT, MAX_VOLUME, KNAPSACK_VOLUME, TRAINING_ITERATIONS['MIMIC'], MIMIC_GENERATE, MIMIC_KEEP, round(mimic_opt,5), round(train_time,3), round(test_time,3)])
+
+
+
+with open("data/wine/knapsack_results.csv", "a") as result_file:
+    writer = csv.writer(result_file)
+    writer.writerows(result_array)

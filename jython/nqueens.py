@@ -4,7 +4,7 @@ For the nqueens problem from the Java file.
 -Athira Nair
 """
 import random
-
+import csv
 import time
 
 import opt.ga.NQueensFitnessFunction as NQueensFitnessFunction
@@ -34,74 +34,95 @@ import opt.prob.MIMIC as MIMIC
 import opt.prob.ProbabilisticOptimizationProblem as ProbabilisticOptimizationProblem
 import shared.FixedIterationTrainer as FixedIterationTrainer
 
-class NQueensTest:
+N = 140
+TRAINING_ITERATIONS = {'RHC': 200000, 'SA': 200000, 'GA': 10000, 'MIMIC': 200}
+SA_TEMP = 1E1
+SA_COOLRATE = .1
+GA_POP = 200
+GA_MATE = 0
+GA_MUTATE = 10
+MIMIC_GENERATE = 200
+MIMIC_KEEP = 100
+result_array=[]
 
-    def __init__(self, n = 10):
-        self.N = n
+ranges = [random.randint(1,N) for i in range(N)]
+ef = NQueensFitnessFunction()
+odd = DiscretePermutationDistribution(N)
+nf = SwapNeighbor()
+mf = SwapMutation()
+cf = SingleCrossOver()
+df = DiscreteDependencyTree(.1)
+hcp = GenericHillClimbingProblem(ef, odd, nf)
+gap = GenericGeneticAlgorithmProblem(ef, odd, mf, cf)
+pop = GenericProbabilisticOptimizationProblem(ef, odd, df)
 
-    def main(self):
-        ranges = [random.randint(1,self.N) for i in range(self.N)]
-        ef = NQueensFitnessFunction()
-        odd = DiscretePermutationDistribution(self.N)
-        nf = SwapNeighbor()
-        mf = SwapMutation()
-        cf = SingleCrossOver()
-        df = DiscreteDependencyTree(.1)
-        hcp = GenericHillClimbingProblem(ef, odd, nf)
-        gap = GenericGeneticAlgorithmProblem(ef, odd, mf, cf)
-        pop = GenericProbabilisticOptimizationProblem(ef, odd, df)
+rhc = RandomizedHillClimbing(hcp)
+fit = FixedIterationTrainer(rhc, TRAINING_ITERATIONS['RHC'])
+starttime = time.time()
+fit.train()
+train_time = (time.time() - starttime)
+print "Train Time : %0.03f" % train_time
+starttime = time.time()
+rhc_opt = ef.value(rhc.getOptimal())
+print "RHC: " + str(rhc_opt)
+# print "RHC: Board Position: "
+# print(ef.boardPositions())
+test_time = (time.time() - starttime)
+print "Test time : %0.03f" % test_time
+result_array.append(['RHC', N, TRAINING_ITERATIONS['RHC'], round(rhc_opt,5), round(train_time,3), round(test_time,3)])
 
-        rhc = RandomizedHillClimbing(hcp)
-        fit = FixedIterationTrainer(rhc, 100)
-        traintime = time.time()
-        fit.train()
-        print "Train Time : %0.03f" % (time.time() - traintime)
-        starttime = time.time()
-        print "RHC: %f" % ef.value(rhc.getOptimal())
-        # print "RHC: Board Position: "
-        # print(ef.boardPositions())
-        print "Test Time : %0.03f" % (time.time() - starttime)
+print("============================")
 
-        print("============================")
+sa = SimulatedAnnealing(SA_TEMP, SA_COOLRATE, hcp)
+fit = FixedIterationTrainer(sa, TRAINING_ITERATIONS['SA'])
+starttime = time.time()
+fit.train()
+train_time = (time.time() - starttime)
+print "Train Time : %0.03f" % train_time
+starttime = time.time()
+sa_opt = ef.value(sa.getOptimal())
+print "SA: " + str(sa_opt)
+# print("SA: Board Position: ")
+# print(ef.boardPositions())
+test_time = (time.time() - starttime)
+print "Test time : %0.03f" % test_time
+result_array.append(['SA', N, TRAINING_ITERATIONS['SA'], SA_TEMP, SA_COOLRATE, round(sa_opt,5), round(train_time,3), round(test_time,3)])
 
-        sa = SimulatedAnnealing(1E1, .1, hcp)
-        fit = FixedIterationTrainer(sa, 100)
-        traintime = time.time()
-        fit.train()
-        print "Train Time : %0.03f" % (time.time() - traintime)
-        starttime = time.time()
-        print "SA: %f" % ef.value(sa.getOptimal())
-        print("SA: Board Position: ")
-        # print(ef.boardPositions())
-        print "Test Time : %0.03f" % (time.time() - starttime)
+print("============================")
 
-        print("============================")
+ga = StandardGeneticAlgorithm(GA_POP, GA_MATE, GA_MUTATE, gap)
+fit = FixedIterationTrainer(ga, TRAINING_ITERATIONS['GA'])
+starttime = time.time()
+fit.train()
+train_time = (time.time() - starttime)
+print "Train Time : %0.03f" % train_time
+starttime = time.time()
+ga_opt = ef.value(ga.getOptimal())
+print "GA: " + str(ga_opt)
+# print("GA: Board Position: ")
+# print(ef.boardPositions())
+test_time = (time.time() - starttime)
+print "Test time : %0.03f" % test_time
+result_array.append(['GA', N, TRAINING_ITERATIONS['GA'], GA_POP, GA_MATE, GA_MUTATE, round(ga_opt,5), round(train_time,3), round(test_time,3)])
 
-        starttime = time.time()
-        ga = StandardGeneticAlgorithm(200, 0, 10, gap)
-        fit = FixedIterationTrainer(ga, 100)
-        traintime = time.time()
-        fit.train()
-        print "Train Time : %0.03f" % (time.time() - traintime)
-        print "GA: %f" % ef.value(ga.getOptimal())
-        # print("GA: Board Position: ")
-        # print(ef.boardPositions())
-        print "Test Time : %0.03f" % (time.time() - starttime)
+print("============================")
 
-        print("============================")
-
-        starttime = time.time()
-        mimic = MIMIC(200, 10, pop)
-        fit = FixedIterationTrainer(mimic, 5)
-        traintime = time.time()
-        fit.train()
-        print "Train Time : %0.03f" % (time.time() - traintime)
-        print "MIMIC: %f" % ef.value(mimic.getOptimal())
-        # print("MIMIC: Board Position: ")
-        # print(ef.boardPositions())
-        print "Test time : %0.03f" % (time.time() - starttime)
+mimic = MIMIC(MIMIC_GENERATE, MIMIC_KEEP, pop)
+fit = FixedIterationTrainer(mimic, TRAINING_ITERATIONS['MIMIC'])
+starttime = time.time()
+fit.train()
+train_time = (time.time() - starttime)
+print "Train Time : %0.03f" % train_time
+mimic_opt = ef.value(mimic.getOptimal())
+print "MIMIC: " + str(mimic_opt)
+# print("MIMIC: Board Position: ")
+# print(ef.boardPositions())
+test_time = (time.time() - starttime)
+print "Test time : %0.03f" % test_time
+result_array.append(['MIMIC', N, TRAINING_ITERATIONS['MIMIC'], MIMIC_GENERATE, MIMIC_KEEP, round(mimic_opt,5), round(train_time,3), round(test_time,3)])
 
 
-if __name__ == "__main__":
-    nqueens = NQueensTest(50)
-    nqueens.main()
+
+with open("data/wine/nqueens_results.csv", "a") as result_file:
+    writer = csv.writer(result_file)
+    writer.writerows(result_array)

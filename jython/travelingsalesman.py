@@ -48,7 +48,7 @@ import util.ABAGAILArrays as ABAGAILArrays
 
 from array import array
 
-
+import csv
 
 
 """
@@ -57,7 +57,17 @@ Commandline parameter(s):
 """
 
 # set N value.  This is the number of points
-N = 70
+N = 100
+TRAINING_ITERATIONS = {'RHC': 200000, 'SA': 200000, 'GA': 1000, 'MIMIC': 1000}
+SA_TEMP = 1E12
+SA_COOLRATE = .999
+GA_POP = 2000
+GA_MATE = 1500
+GA_MUTATE = 250
+MIMIC_GENERATE = 500
+MIMIC_KEEP = 100
+result_array = []
+
 random = Random()
 
 points = [[0 for x in xrange(2)] for x in xrange(N)]
@@ -74,48 +84,63 @@ hcp = GenericHillClimbingProblem(ef, odd, nf)
 gap = GenericGeneticAlgorithmProblem(ef, odd, mf, cf)
 
 rhc = RandomizedHillClimbing(hcp)
-fit = FixedIterationTrainer(rhc, 200000)
-traintime = time.time()
-fit.train()
-print "Train Time : %0.03f" % (time.time() - traintime)
+fit = FixedIterationTrainer(rhc, TRAINING_ITERATIONS['RHC'])
 starttime = time.time()
-print "RHC Inverse of Distance: " + str(ef.value(rhc.getOptimal()))
-print "Test time : %0.03f" % (time.time() - starttime)
+fit.train()
+train_time = (time.time() - starttime)
+print "Train Time : %0.03f" % train_time
+starttime = time.time()
+rhc_opt = ef.value(rhc.getOptimal())
+print "RHC Inverse of Distance: " + str(rhc_opt)
+test_time = (time.time() - starttime)
+print "Test time : %0.03f" % test_time
 print "Route:"
 path = []
 for x in range(0,N):
     path.append(rhc.getOptimal().getDiscrete(x))
 print path
+print("============================")
+result_array.append(['RHC', N, TRAINING_ITERATIONS['RHC'], round(rhc_opt,5), round(train_time,3), round(test_time,3)])
 
 
-sa = SimulatedAnnealing(1E12, .999, hcp)
-fit = FixedIterationTrainer(sa, 200000)
-traintime = time.time()
-fit.train()
-print "Train Time : %0.03f" % (time.time() - traintime)
+sa = SimulatedAnnealing(SA_TEMP, SA_COOLRATE, hcp)
+fit = FixedIterationTrainer(sa, TRAINING_ITERATIONS['SA'])
 starttime = time.time()
-print "SA Inverse of Distance: " + str(ef.value(sa.getOptimal()))
-print "Test time : %0.03f" % (time.time() - starttime)
+fit.train()
+train_time = (time.time() - starttime)
+print "Train Time : %0.03f" % train_time
+starttime = time.time()
+sa_opt = ef.value(sa.getOptimal())
+print "SA Inverse of Distance: " + str(sa_opt)
+test_time = (time.time() - starttime)
+print "Test time : %0.03f" % test_time
 print "Route:"
 path = []
 for x in range(0,N):
     path.append(sa.getOptimal().getDiscrete(x))
 print path
+print("============================")
+result_array.append(['SA', N, TRAINING_ITERATIONS['SA'], SA_TEMP, SA_COOLRATE, round(sa_opt,5), round(train_time,3), round(test_time,3)])
 
 
-ga = StandardGeneticAlgorithm(2000, 1500, 250, gap)
-fit = FixedIterationTrainer(ga, 1000)
-traintime = time.time()
-fit.train()
-print "Train Time : %0.03f" % (time.time() - traintime)
+ga = StandardGeneticAlgorithm(GA_POP, GA_MATE, GA_MUTATE, gap)
+fit = FixedIterationTrainer(ga, TRAINING_ITERATIONS['GA'])
 starttime = time.time()
-print "GA Inverse of Distance: " + str(ef.value(ga.getOptimal()))
-print "Test time : %0.03f" % (time.time() - starttime)
+fit.train()
+train_time = (time.time() - starttime)
+print "Train Time : %0.03f" % train_time
+starttime = time.time()
+ga_opt = ef.value(ga.getOptimal())
+print "GA Inverse of Distance: " + str(ga_opt)
+test_time = (time.time() - starttime)
+print "Test time : %0.03f" % test_time
 print "Route:"
 path = []
 for x in range(0,N):
     path.append(ga.getOptimal().getDiscrete(x))
 print path
+print("============================")
+result_array.append(['GA', N, TRAINING_ITERATIONS['GA'], GA_POP, GA_MATE, GA_MUTATE, round(ga_opt,5), round(train_time,3), round(test_time,3)])
 
 
 # for mimic we use a sort encoding
@@ -126,14 +151,17 @@ odd = DiscreteUniformDistribution(ranges);
 df = DiscreteDependencyTree(.1, ranges); 
 pop = GenericProbabilisticOptimizationProblem(ef, odd, df);
 
-mimic = MIMIC(500, 100, pop)
-fit = FixedIterationTrainer(mimic, 1000)
-traintime = time.time()
-fit.train()
-print "Train Time : %0.03f" % (time.time() - traintime)
+mimic = MIMIC(MIMIC_GENERATE, MIMIC_KEEP, pop)
+fit = FixedIterationTrainer(mimic, TRAINING_ITERATIONS['MIMIC'])
 starttime = time.time()
-print "MIMIC Inverse of Distance: " + str(ef.value(mimic.getOptimal()))
-print "Test time : %0.03f" % (time.time() - starttime)
+fit.train()
+train_time = (time.time() - starttime)
+print "Train Time : %0.03f" % train_time
+starttime = time.time()
+mimic_opt = ef.value(mimic.getOptimal())
+print "MIMIC Inverse of Distance: " + str(mimic_opt)
+test_time = (time.time() - starttime)
+print "Test time : %0.03f" % test_time
 print "Route:"
 path = []
 optimal = mimic.getOptimal()
@@ -144,3 +172,10 @@ for i in range(0,len(ddata)):
 order = ABAGAILArrays.indices(optimal.size())
 ABAGAILArrays.quicksort(ddata, order)
 print order
+print("============================")
+result_array.append(['MIMIC', N, TRAINING_ITERATIONS['MIMIC'], MIMIC_GENERATE, MIMIC_KEEP, round(mimic_opt,5), round(train_time,3), round(test_time,3)])
+
+
+with open("data/wine/tsp_results.csv", "a") as result_file:
+    writer = csv.writer(result_file)
+    writer.writerows(result_array)
