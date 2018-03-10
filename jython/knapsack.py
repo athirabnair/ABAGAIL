@@ -106,7 +106,7 @@ print "RHC: " + str(rhc_opt)
 test_time = (time.time() - starttime)
 print "Test time : %0.03f" % test_time
 print("============================")
-result_array.append(['RHC', NUM_ITEMS, COPIES_EACH, MAX_WEIGHT, MAX_VOLUME, KNAPSACK_VOLUME, TRAINING_ITERATIONS['RHC'], round(rhc_opt,5), round(train_time,3), round(test_time,3)])
+result_array.append(['RHC', NUM_ITEMS, COPIES_EACH, MAX_WEIGHT, MAX_VOLUME, KNAPSACK_VOLUME, TRAINING_ITERATIONS['RHC'], '', '', '', round(rhc_opt,5), round(train_time,3), round(test_time,3)])
 
 
 sa = SimulatedAnnealing(SA_TEMP, SA_COOLRATE, hcp)
@@ -121,7 +121,7 @@ print "SA: " + str(sa_opt)
 test_time = (time.time() - starttime)
 print "Test time : %0.03f" % test_time
 print("============================")
-result_array.append(['SA', NUM_ITEMS, COPIES_EACH, MAX_WEIGHT, MAX_VOLUME, KNAPSACK_VOLUME, TRAINING_ITERATIONS['SA'], SA_TEMP, SA_COOLRATE, round(sa_opt,5), round(train_time,3), round(test_time,3)])
+result_array.append(['SA', NUM_ITEMS, COPIES_EACH, MAX_WEIGHT, MAX_VOLUME, KNAPSACK_VOLUME, TRAINING_ITERATIONS['SA'], SA_TEMP, SA_COOLRATE, '', round(sa_opt,5), round(train_time,3), round(test_time,3)])
 
 
 ga = StandardGeneticAlgorithm(GA_POP, GA_MATE, GA_MUTATE, gap)
@@ -151,7 +151,7 @@ print "MIMIC: " + str(mimic_opt)
 test_time = (time.time() - starttime)
 print "Test time : %0.03f" % test_time
 print("============================")
-result_array.append(['MIMIC', NUM_ITEMS, COPIES_EACH, MAX_WEIGHT, MAX_VOLUME, KNAPSACK_VOLUME, TRAINING_ITERATIONS['MIMIC'], MIMIC_GENERATE, MIMIC_KEEP, round(mimic_opt,5), round(train_time,3), round(test_time,3)])
+result_array.append(['MIMIC', NUM_ITEMS, COPIES_EACH, MAX_WEIGHT, MAX_VOLUME, KNAPSACK_VOLUME, TRAINING_ITERATIONS['MIMIC'], MIMIC_GENERATE, MIMIC_KEEP, '', round(mimic_opt,5), round(train_time,3), round(test_time,3)])
 
 
 

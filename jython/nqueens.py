@@ -69,7 +69,7 @@ print "RHC: " + str(rhc_opt)
 # print(ef.boardPositions())
 test_time = (time.time() - starttime)
 print "Test time : %0.03f" % test_time
-result_array.append(['RHC', N, TRAINING_ITERATIONS['RHC'], round(rhc_opt,5), round(train_time,3), round(test_time,3)])
+result_array.append(['RHC', N, TRAINING_ITERATIONS['RHC'], '', '', '', round(rhc_opt,5), round(train_time,3), round(test_time,3)])
 
 print("============================")
 
@@ -86,7 +86,7 @@ print "SA: " + str(sa_opt)
 # print(ef.boardPositions())
 test_time = (time.time() - starttime)
 print "Test time : %0.03f" % test_time
-result_array.append(['SA', N, TRAINING_ITERATIONS['SA'], SA_TEMP, SA_COOLRATE, round(sa_opt,5), round(train_time,3), round(test_time,3)])
+result_array.append(['SA', N, TRAINING_ITERATIONS['SA'], SA_TEMP, SA_COOLRATE, '', round(sa_opt,5), round(train_time,3), round(test_time,3)])
 
 print("============================")
 
@@ -119,7 +119,7 @@ print "MIMIC: " + str(mimic_opt)
 # print(ef.boardPositions())
 test_time = (time.time() - starttime)
 print "Test time : %0.03f" % test_time
-result_array.append(['MIMIC', N, TRAINING_ITERATIONS['MIMIC'], MIMIC_GENERATE, MIMIC_KEEP, round(mimic_opt,5), round(train_time,3), round(test_time,3)])
+result_array.append(['MIMIC', N, TRAINING_ITERATIONS['MIMIC'], MIMIC_GENERATE, MIMIC_KEEP, '', round(mimic_opt,5), round(train_time,3), round(test_time,3)])
 
 
 

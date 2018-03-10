@@ -100,7 +100,7 @@ for x in range(0,N):
     path.append(rhc.getOptimal().getDiscrete(x))
 print path
 print("============================")
-result_array.append(['RHC', N, TRAINING_ITERATIONS['RHC'], round(rhc_opt,5), round(train_time,3), round(test_time,3)])
+result_array.append(['RHC', N, TRAINING_ITERATIONS['RHC'], '', '', '', round(rhc_opt,5), round(train_time,3), round(test_time,3)])
 
 
 sa = SimulatedAnnealing(SA_TEMP, SA_COOLRATE, hcp)
@@ -120,7 +120,7 @@ for x in range(0,N):
     path.append(sa.getOptimal().getDiscrete(x))
 print path
 print("============================")
-result_array.append(['SA', N, TRAINING_ITERATIONS['SA'], SA_TEMP, SA_COOLRATE, round(sa_opt,5), round(train_time,3), round(test_time,3)])
+result_array.append(['SA', N, TRAINING_ITERATIONS['SA'], SA_TEMP, SA_COOLRATE, '', round(sa_opt,5), round(train_time,3), round(test_time,3)])
 
 
 ga = StandardGeneticAlgorithm(GA_POP, GA_MATE, GA_MUTATE, gap)
@@ -173,7 +173,7 @@ order = ABAGAILArrays.indices(optimal.size())
 ABAGAILArrays.quicksort(ddata, order)
 print order
 print("============================")
-result_array.append(['MIMIC', N, TRAINING_ITERATIONS['MIMIC'], MIMIC_GENERATE, MIMIC_KEEP, round(mimic_opt,5), round(train_time,3), round(test_time,3)])
+result_array.append(['MIMIC', N, TRAINING_ITERATIONS['MIMIC'], MIMIC_GENERATE, MIMIC_KEEP, '', round(mimic_opt,5), round(train_time,3), round(test_time,3)])
 
 
 with open("data/wine/tsp_results.csv", "a") as result_file:
