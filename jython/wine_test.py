@@ -24,7 +24,7 @@ import opt.SimulatedAnnealing as SimulatedAnnealing
 import opt.ga.StandardGeneticAlgorithm as StandardGeneticAlgorithm
 
 
-INPUT_FILE = os.path.join("..", "..", "..", "Data", "winequality-white-modified.csv")
+INPUT_FILE = os.path.join("..", "Data", "winequality-white-modified.csv")
 
 INPUT_LAYER = 11
 HIDDEN_LAYER = 9

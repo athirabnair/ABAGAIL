@@ -58,14 +58,14 @@ Commandline parameter(s):
 
 # set N value.  This is the number of points
 N = 100
-TRAINING_ITERATIONS = {'RHC': 200000, 'SA': 200000, 'GA': 1000, 'MIMIC': 200}
-SA_TEMP = 1E12
+TRAINING_ITERATIONS = {'RHC': 200000, 'SA': 200000, 'GA': 2000, 'MIMIC': 200}
+SA_TEMP = 1E9
 SA_COOLRATE = .999
 GA_POP = 2000
 GA_MATE = 1500
 GA_MUTATE = 250
-MIMIC_GENERATE = 600
-MIMIC_KEEP = 10
+MIMIC_GENERATE = 200
+MIMIC_KEEP = 100
 result_array = []
 
 random = Random()

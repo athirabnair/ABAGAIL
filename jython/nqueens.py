@@ -38,11 +38,11 @@ N = 50
 TRAINING_ITERATIONS = {'RHC': 200000, 'SA': 200000, 'GA': 1000, 'MIMIC': 400}
 SA_TEMP = 1E1
 SA_COOLRATE = .1
-GA_POP = 400
+GA_POP = 200
 GA_MATE = 0
 GA_MUTATE = 10
-MIMIC_GENERATE = 4000
-MIMIC_KEEP = 100
+MIMIC_GENERATE = 200
+MIMIC_KEEP = 10
 result_array=[]
 
 ranges = [random.randint(1,N) for i in range(N)]
