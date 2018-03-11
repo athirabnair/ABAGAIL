@@ -57,9 +57,9 @@ MAX_VOLUME = 50
 # The volume of the knapsack 
 KNAPSACK_VOLUME = MAX_VOLUME * NUM_ITEMS * COPIES_EACH * .4
 
-TRAINING_ITERATIONS = {'RHC': 200000, 'SA': 200000, 'GA': 10000, 'MIMIC': 10000}
-SA_TEMP = 100
-SA_COOLRATE = .95
+TRAINING_ITERATIONS = {'RHC': 200000, 'SA': 300000, 'GA': 1000, 'MIMIC': 1000}
+SA_TEMP = 1E9
+SA_COOLRATE = .2
 GA_POP = 200
 GA_MATE = 150
 GA_MUTATE = 25
@@ -94,34 +94,34 @@ hcp = GenericHillClimbingProblem(ef, odd, nf)
 gap = GenericGeneticAlgorithmProblem(ef, odd, mf, cf)
 pop = GenericProbabilisticOptimizationProblem(ef, odd, df)
 
-rhc = RandomizedHillClimbing(hcp)
-fit = FixedIterationTrainer(rhc, TRAINING_ITERATIONS['RHC'])
-starttime = time.time()
-fit.train()
-train_time = (time.time() - starttime)
-print "Train Time : %0.03f" % train_time
-starttime = time.time()
-rhc_opt = ef.value(rhc.getOptimal())
-print "RHC: " + str(rhc_opt)
-test_time = (time.time() - starttime)
-print "Test time : %0.03f" % test_time
-print("============================")
-result_array.append(['RHC', NUM_ITEMS, COPIES_EACH, MAX_WEIGHT, MAX_VOLUME, KNAPSACK_VOLUME, TRAINING_ITERATIONS['RHC'], '', '', '', round(rhc_opt,5), round(train_time,3), round(test_time,3)])
-
-
-sa = SimulatedAnnealing(SA_TEMP, SA_COOLRATE, hcp)
-fit = FixedIterationTrainer(sa, TRAINING_ITERATIONS['SA'])
-starttime = time.time()
-fit.train()
-train_time = (time.time() - starttime)
-print "Train Time : %0.03f" % train_time
-starttime = time.time()
-sa_opt = ef.value(sa.getOptimal())
-print "SA: " + str(sa_opt)
-test_time = (time.time() - starttime)
-print "Test time : %0.03f" % test_time
-print("============================")
-result_array.append(['SA', NUM_ITEMS, COPIES_EACH, MAX_WEIGHT, MAX_VOLUME, KNAPSACK_VOLUME, TRAINING_ITERATIONS['SA'], SA_TEMP, SA_COOLRATE, '', round(sa_opt,5), round(train_time,3), round(test_time,3)])
+# rhc = RandomizedHillClimbing(hcp)
+# fit = FixedIterationTrainer(rhc, TRAINING_ITERATIONS['RHC'])
+# starttime = time.time()
+# fit.train()
+# train_time = (time.time() - starttime)
+# print "Train Time : %0.03f" % train_time
+# starttime = time.time()
+# rhc_opt = ef.value(rhc.getOptimal())
+# print "RHC: " + str(rhc_opt)
+# test_time = (time.time() - starttime)
+# print "Test time : %0.03f" % test_time
+# print("============================")
+# result_array.append(['RHC', NUM_ITEMS, COPIES_EACH, MAX_WEIGHT, MAX_VOLUME, KNAPSACK_VOLUME, TRAINING_ITERATIONS['RHC'], '', '', '', round(rhc_opt,5), round(train_time,3), round(test_time,3)])
+#
+#
+# sa = SimulatedAnnealing(SA_TEMP, SA_COOLRATE, hcp)
+# fit = FixedIterationTrainer(sa, TRAINING_ITERATIONS['SA'])
+# starttime = time.time()
+# fit.train()
+# train_time = (time.time() - starttime)
+# print "Train Time : %0.03f" % train_time
+# starttime = time.time()
+# sa_opt = ef.value(sa.getOptimal())
+# print "SA: " + str(sa_opt)
+# test_time = (time.time() - starttime)
+# print "Test time : %0.03f" % test_time
+# print("============================")
+# result_array.append(['SA', NUM_ITEMS, COPIES_EACH, MAX_WEIGHT, MAX_VOLUME, KNAPSACK_VOLUME, TRAINING_ITERATIONS['SA'], SA_TEMP, SA_COOLRATE, '', round(sa_opt,5), round(train_time,3), round(test_time,3)])
 
 
 ga = StandardGeneticAlgorithm(GA_POP, GA_MATE, GA_MUTATE, gap)
